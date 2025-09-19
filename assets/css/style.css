@@ -1,11 +1,13 @@
-/* 基礎樣式設定 */
 body {
     font-family: 'Noto Sans TC', 'Inter', sans-serif;
     background-color: #f0f2f5; /* 給頁面一個背景色，突顯手機模型 */
 }
 
-/* 定義導航欄啟用狀態的樣式 */
+/* 定義導航欄啟用狀態的樣式。
+  當 <a> 標籤擁有 .active class 時，其內部的 svg 和 span 會變色。
+*/
 .nav-item.active svg,
 .nav-item.active span {
     color: #4f46e5; /* 使用深一點的靛藍色作為啟用色 */
+    font-weight: 600;
 }
