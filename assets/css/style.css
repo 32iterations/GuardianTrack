@@ -1,0 +1,11 @@
+/* 基礎樣式設定 */
+body {
+    font-family: 'Noto Sans TC', 'Inter', sans-serif;
+    background-color: #f0f2f5; /* 給頁面一個背景色，突顯手機模型 */
+}
+
+/* 定義導航欄啟用狀態的樣式 */
+.nav-item.active svg,
+.nav-item.active span {
+    color: #4f46e5; /* 使用深一點的靛藍色作為啟用色 */
+}
