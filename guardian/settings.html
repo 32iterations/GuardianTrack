@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GuardianTrack - 系統設定</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body class="flex items-center justify-center min-h-screen">
+
+    <!-- 手機 UI 框架 -->
+    <div class="w-full max-w-sm h-[800px] bg-gray-100 rounded-3xl shadow-2xl overflow-hidden flex flex-col border-4 border-black">
+        
+        <!-- 主要內容區域 -->
+        <main class="flex-1 overflow-y-auto">
+            
+            <!-- 頂部漸層背景 -->
+            <div class="bg-gradient-to-r from-blue-500 to-indigo-700 p-4 text-white rounded-b-[3rem] pb-12 relative">
+                <!-- 頁首導航 -->
+                <div class="flex items-center space-x-4">
+                    <a href="./index.html" class="z-10">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                    </a>
+                    <h1 class="text-lg font-bold">系統設定</h1>
+                </div>
+            </div>
+
+            <!-- 設定列表 -->
+            <div class="p-4 space-y-5 -mt-10">
+
+                <!-- 個人資料區塊 -->
+                <section>
+                    <div class="flex justify-between items-center mb-2 px-2">
+                        <h3 class="font-bold text-gray-800">個人資料</h3>
+                        <a href="#" class="text-sm text-blue-600 font-semibold">編輯</a>
+                    </div>
+                    <div class="bg-white rounded-2xl shadow-md p-4 space-y-3 text-sm">
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-500">姓名</span>
+                            <span class="text-gray-800 font-medium">測試用戶</span>
+                        </div>
+                        <hr/>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-500">電子郵件</span>
+                            <span class="text-gray-800 font-medium">test@hsinchu.gov.tw</span>
+                        </div>
+                        <hr/>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-500">電話</span>
+                            <span class="text-gray-400 font-medium">未設定</span>
+                        </div>
+                        <hr/>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-500">角色</span>
+                            <span class="text-gray-800 font-medium">志工</span>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- 通知設定區塊 -->
+                <section>
+                    <h3 class="font-bold text-gray-800 mb-2 px-2">通知設定</h3>
+                    <div class="bg-white rounded-2xl shadow-md p-4 space-y-4 text-sm">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <p class="font-medium text-gray-800">推播通知</p>
+                                <p class="text-xs text-gray-500">接收警報與提醒通知</p>
+                            </div>
+                            <button type="button" class="bg-blue-600 relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none" role="switch" aria-checked="true">
+                                <span class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out translate-x-5"></span>
+                            </button>
+                        </div>
+                        <hr/>
+                         <div class="flex justify-between items-center">
+                            <div>
+                                <p class="font-medium text-gray-800">位置追蹤</p>
+                                <p class="text-xs text-gray-500">背景定位與軌跡記錄</p>
+                            </div>
+                            <button type="button" class="bg-blue-600 relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none" role="switch" aria-checked="true">
+                                <span class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out translate-x-5"></span>
+                            </button>
+                        </div>
+                        <hr/>
+                         <div class="flex justify-between items-center">
+                            <div>
+                                <p class="font-medium text-gray-800">自動求救</p>
+                                <p class="text-xs text-gray-500">跌倒偵測自動發送SOS</p>
+                            </div>
+                            <button type="button" class="bg-gray-200 relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none" role="switch" aria-checked="false">
+                                <span class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out translate-x-0"></span>
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 其他區塊 -->
+                <section>
+                    <h3 class="font-bold text-gray-800 mb-2 px-2">其他</h3>
+                    <div class="bg-white rounded-2xl shadow-md text-sm font-medium">
+                        <a href="#" class="flex justify-between items-center p-4">
+                            <span class="text-gray-800">關於我們</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-400"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                        </a>
+                        <hr class="mx-4"/>
+                        <a href="#" class="flex justify-between items-center p-4">
+                            <span class="text-gray-800">隱私權政策</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-400"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                        </a>
+                        <hr class="mx-4"/>
+                        <a href="#" class="flex justify-between items-center p-4">
+                            <span class="text-gray-800">使用條款</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-400"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                        </a>
+                        <hr class="mx-4"/>
+                        <a href="#" class="flex justify-between items-center p-4">
+                            <span class="text-gray-800">版本資訊 v1.2.0</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-400"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                        </a>
+                    </div>
+                </section>
+
+                <!-- 登出按鈕 -->
+                <section class="pt-4 pb-2">
+                    <button class="w-full bg-red-500 text-white font-bold py-3 rounded-xl shadow-lg shadow-red-500/30 hover:bg-red-600 transition-all">
+                        登出
+                    </button>
+                </section>
+            </div>
+        </main>
+        
+    </div>
+    
+</body>
+</html>
+
