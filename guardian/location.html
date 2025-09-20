@@ -186,8 +186,11 @@
             const lat = startPoint[0] + (endPoint[0] - startPoint[0]) * segmentProgress;
             const lng = startPoint[1] + (endPoint[1] - startPoint[1]) * segmentProgress;
             const currentPos = [lat, lng];
+            
             patientMarker.setLatLng(currentPos);
             map.panTo(currentPos, { animate: true, duration: 0.1 });
+            updatePredictionPath(currentPos, endPoint); // <<-- RE-IMPLEMENTED
+            
             animationFrameId = requestAnimationFrame(animate);
         }
         animationFrameId = requestAnimationFrame(animate);
@@ -195,6 +198,10 @@
     
     function startWanderingAnimation() {
         cancelAnimationFrame(animationFrameId);
+        // <<-- RE-IMPLEMENTED
+        predictionPathLayers.forEach(layer => map.removeLayer(layer)); 
+        predictionPathLayers = [];
+
         const wanderingPoints = [normalPath[deviationPointIndex]];
         warningPathPolyline = L.polyline(wanderingPoints, { color: '#999999', weight: 5, dashArray: '5,5' }).addTo(map);
         
@@ -238,6 +245,20 @@
         animationFrameId = requestAnimationFrame(animateWander);
     }
     
+    // <<-- RE-IMPLEMENTED
+    function updatePredictionPath(currentPos, nextPoint) {
+        predictionPathLayers.forEach(layer => map.removeLayer(layer));
+        predictionPathLayers = [];
+        const pathProbabilityBands = [ { color: '#27ae60', weight: 70, opacity: 0.2 }, { color: '#2ecc71', weight: 60, opacity: 0.25 }, { color: '#f1c40f', weight: 50, opacity: 0.3 }, { color: '#e67e22', weight: 40, opacity: 0.35 }, { color: '#e74c3c', weight: 30, opacity: 0.4 }, { color: '#c0392b', weight: 20, opacity: 0.5 } ];
+        const predictionSegment = [currentPos, nextPoint];
+        pathProbabilityBands.forEach(band => {
+            const pathLayer = L.polyline(predictionSegment, { color: band.color, weight: band.weight, opacity: band.opacity, lineCap: 'round', lineJoin: 'round' }).addTo(map);
+            predictionPathLayers.push(pathLayer);
+        });
+        const centerLine = L.polyline(predictionSegment, { color: 'black', weight: 2, opacity: 0.8, dashArray: '5, 5' }).addTo(map);
+        predictionPathLayers.push(centerLine);
+    }
+
     function showToast() {
         document.getElementById('toast-notification').classList.remove('hidden');
     }
