@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>GuardianTrack - 地理圍欄</title>
+    <!-- Leaflet.js CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <style>
+        /* 確保地圖填滿框架 */
+        #map-container {
+            height: 100%;
+            width: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        #map {
+            height: 100%;
+            width: 100%;
+            z-index: 10;
+        }
+        /* 美化 Leaflet 控制項 */
+        .leaflet-control-zoom {
+            border: none !important;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+        .leaflet-control-zoom a {
+            background-color: white !important;
+            color: #333 !important;
+        }
+        .leaflet-popup-content-wrapper {
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen">
+
+    <!-- 手機 UI 框架 -->
+    <div class="w-full max-w-sm h-[800px] bg-gray-100 rounded-3xl shadow-2xl overflow-hidden flex flex-col border-4 border-black">
+        
+        <!-- 主要內容區域 (地圖和浮動UI) -->
+        <main class="flex-1 relative">
+            
+            <!-- 地圖容器 -->
+            <div id="map-container">
+                <div id="map"></div>
+            </div>
+
+            <!-- 浮動頂部導覽列 -->
+            <header class="absolute top-0 left-0 right-0 p-4 z-20">
+                <div class="bg-white/80 backdrop-blur-md rounded-xl shadow-md p-3 flex items-center justify-between">
+                    <a href="./index.html" class="p-2 rounded-full hover:bg-gray-200">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                    </a>
+                    <h1 class="text-base font-bold text-gray-800">地理圍欄：<span class="text-purple-600">陳秀英</span></h1>
+                    <div class="w-10 h-10"></div> <!-- 佔位符 -->
+                </div>
+            </header>
+            
+            <!-- 浮動底部資訊與控制面板 -->
+            <div class="absolute bottom-0 left-0 right-0 p-4 z-20">
+                <div class="bg-white rounded-2xl shadow-lg p-4 space-y-4">
+                    <!-- 已設定圍欄列表 -->
+                    <div>
+                        <h3 class="font-bold text-gray-800">已設定的安全區域</h3>
+                        <div id="geofence-list" class="mt-2 space-y-2">
+                            <!-- 預設的 "家" -->
+                            <div class="bg-gray-100 rounded-lg p-3 flex justify-between items-center">
+                                <div>
+                                    <p class="font-semibold text-gray-700">📍 家</p>
+                                    <p class="text-xs text-gray-500">半徑：200 公尺</p>
+                                </div>
+                                <button class="text-xs text-red-500 font-semibold">移除</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 智慧推薦 -->
+                    <div class="border-t pt-4">
+                        <h3 class="font-bold text-gray-800">智慧推薦</h3>
+                        <p class="text-xs text-gray-500 mb-2">根據長者習慣，快速新增常用地點</p>
+                        <div id="recommendations" class="flex flex-wrap gap-2">
+                            <button data-lat="24.8049" data-lng="120.9719" data-name="新竹公園" class="bg-green-100 text-green-800 text-sm font-semibold px-3 py-1.5 rounded-full hover:bg-green-200 transition-colors">+ 新竹公園</button>
+                            <button data-lat="24.7981" data-lng="120.9701" data-name="竹蓮市場" class="bg-orange-100 text-orange-800 text-sm font-semibold px-3 py-1.5 rounded-full hover:bg-orange-200 transition-colors">+ 竹蓮市場</button>
+                            <button data-lat="24.8143" data-lng="120.9723" data-name="台大醫院" class="bg-blue-100 text-blue-800 text-sm font-semibold px-3 py-1.5 rounded-full hover:bg-blue-200 transition-colors">+ 台大醫院</button>
+                        </div>
+                    </div>
+
+                    <!-- 自訂新增 -->
+                     <div class="border-t pt-4">
+                        <h3 class="font-bold text-gray-800">自訂新增</h3>
+                         <div class="flex gap-2 mt-2">
+                            <input type="text" id="custom-address" placeholder="輸入地址或點擊地圖" class="flex-grow border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                            <button id="add-custom-btn" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg transition-colors">新增</button>
+                         </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Leaflet.js JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+    <script>
+        // --- 變數定義 ---
+        const homeCoords = [24.8088, 120.9718]; // 陳秀英家 (民生路)
+        const mapCenter = homeCoords;
+
+        let map;
+        let geofences = {}; // 存放地圖上的圍欄圖層
+
+        // --- 初始化函式 ---
+        function initializeMap() {
+            map = L.map('map', { zoomControl: false }).setView(mapCenter, 16);
+            L.control.zoom({ position: 'bottomright' }).addTo(map);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '© OpenStreetMap' }).addTo(map);
+
+            // 預設加上 "家" 的圍欄
+            addGeofence('家', homeCoords, 200);
+        }
+
+        // --- 功能函式 ---
+        function addGeofence(name, coords, radius) {
+            // 如果已存在同名圍欄，先移除舊的
+            if (geofences[name]) {
+                map.removeLayer(geofences[name].marker);
+                map.removeLayer(geofences[name].circle);
+            }
+
+            const marker = L.marker(coords).addTo(map)
+                .bindPopup(`<b>${name}</b><br>安全區域半徑: ${radius}公尺`).openPopup();
+
+            const circle = L.circle(coords, {
+                color: '#8b5cf6',
+                fillColor: '#a78bfa',
+                fillOpacity: 0.3,
+                radius: radius
+            }).addTo(map);
+
+            geofences[name] = { marker, circle };
+            map.flyTo(coords, 16);
+            updateGeofenceList();
+        }
+
+        function removeGeofence(name) {
+            if (geofences[name]) {
+                map.removeLayer(geofences[name].marker);
+                map.removeLayer(geofences[name].circle);
+                delete geofences[name];
+                updateGeofenceList();
+            }
+        }
+        
+        function updateGeofenceList() {
+            const listContainer = document.getElementById('geofence-list');
+            listContainer.innerHTML = ''; // 清空列表
+
+            if (Object.keys(geofences).length === 0) {
+                 listContainer.innerHTML = '<p class="text-sm text-gray-500">尚未設定任何安全區域。</p>';
+                 return;
+            }
+
+            for (const name in geofences) {
+                const fence = geofences[name];
+                const radius = fence.circle.getRadius();
+                const listItem = document.createElement('div');
+                listItem.className = 'bg-gray-100 rounded-lg p-3 flex justify-between items-center';
+                listItem.innerHTML = `
+                    <div>
+                        <p class="font-semibold text-gray-700">📍 ${name}</p>
+                        <p class="text-xs text-gray-500">半徑：${radius} 公尺</p>
+                    </div>
+                    <button class="text-xs text-red-500 font-semibold remove-btn" data-name="${name}">移除</button>
+                `;
+                listContainer.appendChild(listItem);
+            }
+
+            // 重新綁定移除按鈕事件
+            document.querySelectorAll('.remove-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const nameToRemove = e.target.getAttribute('data-name');
+                    removeGeofence(nameToRemove);
+                });
+            });
+        }
+
+
+        // --- 事件監聽 ---
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeMap();
+            
+            // 推薦按鈕事件
+            document.getElementById('recommendations').addEventListener('click', (e) => {
+                if (e.target.tagName === 'BUTTON') {
+                    const lat = parseFloat(e.target.dataset.lat);
+                    const lng = parseFloat(e.target.dataset.lng);
+                    const name = e.target.dataset.name;
+                    addGeofence(name, [lat, lng], 300); // 預設半徑300公尺
+                }
+            });
+
+            // 自訂新增按鈕 (目前僅為示意)
+            document.getElementById('add-custom-btn').addEventListener('click', () => {
+                const address = document.getElementById('custom-address').value;
+                if(address) {
+                    alert(`將會新增地址為 "${address}" 的圍欄。\n(此為示意功能，實際需串接地理編碼API)`);
+                } else {
+                    alert('請先輸入地址或在地圖上選取位置。');
+                }
+            });
+
+             // 監聽地圖點擊
+            map.on('click', function(e) {
+                const lat = e.latlng.lat.toFixed(5);
+                const lng = e.latlng.lng.toFixed(5);
+                document.getElementById('custom-address').value = `座標: ${lat}, ${lng}`;
+            });
+        });
+    </script>
+</body>
+</html>
+
+
+http://googleusercontent.com/immersive_entry_chip/0
